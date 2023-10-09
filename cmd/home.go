@@ -68,6 +68,17 @@ func VirginHomeHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func AlaskaHomeHandler(w http.ResponseWriter, r *http.Request) {
+	t := Parse("alaska-home.html")
+	t.Execute(w, struct {
+		Error      bool
+		CommitHash string
+	}{
+		r.URL.Query().Get("error") == "t",
+		commitHash,
+	})
+}
+
 func HelpHandler(w http.ResponseWriter, r *http.Request) {
 	t := Parse("help.html")
 	t.Execute(w, struct {

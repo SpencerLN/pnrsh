@@ -1,0 +1,166 @@
+{{template "base" .}}
+
+{{define "main"}}
+<div class="container">
+    <h2>Confirmation #{{.ConfirmationCode}}</h2>
+    <h4><strong>Origin:</strong> {{.PNR.Itinerary.Origin}} | <strong>Type:</strong> {{.PNR.Itinerary.Type}} |
+        <strong>Tickets Match Itin:</strong> {{.PNR.Itinerary.MatchesTickets}}
+    </h4>
+
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link" style="color: black">Tools</a>
+        </li>
+    </ul>
+    <hr />
+
+    <div class="row">
+        <div class="col">
+            <h3>Flights</h3>
+            {{range .PNR.Flights}}
+            <h5><strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong> {{.OriginAirportCode}} ✈️
+                {{.DestinationAirportCode}} <span class="badge bg-primary">{{.CurrentActionCode}}</span></h5>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td>{{.Status}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Departure</strong></td>
+                        <td>{{.ScheduledDeparture}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Arrival</strong></td>
+                        <td>{{.ScheduledArrival}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Distance</strong></td>
+                        <td>{{.Distance}} mi</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Operating/Marketing Airline</strong></td>
+                        <td>{{.OperatingAirlineCode}}/{{.MarketingAirlineCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Current Action Code</strong></td>
+                        <td>{{.CurrentActionCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Previous Action Code</strong></td>
+                        <td>{{.PreviousActionCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Upgrade Status</strong></td>
+                        <td>{{.UpgradeStatus}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Class of Service</strong></td>
+                        <td>{{.ClassOfService}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Is Disrupted</strong></td>
+                        <td>{{.IsDisrupted}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Is Flown</strong></td>
+                        <td>{{.IsFlown}}</td>
+                    </tr>
+                    {{range .SSRs}}
+                    <tr>
+                        <td><strong>SSR ID: {{.Id}}</strong></td>
+                        <td> <strong>Type:</strong> {{.Type}} | <strong>Airline Code:</strong> {{.AirlineCode}} |
+                            <strong>Status:</strong> {{.Status}} | <strong>Remark:</strong> {{.Remark}}
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{end}}
+
+            <h3>Fare</h3>
+            <table class="table">
+
+            </table>
+        </div>
+        <div class="col">
+            <h3>Passengers</h3>
+            {{range .PNR.Passengers}}
+            <div class="card">
+                <div class="card-body">
+                    <h5>{{.Name}} <span class="badge bg-success">FF Number: {{.FfNumber}}</span><span class="badge bg-success">Tier: {{.TierStatus}}</span> <span
+                            class="badge bg-primary"></span></h5>
+                    <h6>SSRs</h6>
+                    <table class="table">
+                        <tbody>
+                            {{range .SSRs}}
+                            <tr>
+                                <td><strong>{{.Type}}</strong></td>
+                                <td>{{.AirlineCode}}</td>
+                                <td>{{.FlightNum}}</td>
+                                <td>{{.FlightDate}}</td>
+                                <td>{{.Status}}</td>>
+                                <td>{{.Remark}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <br />
+            {{end}}
+            <h3>Tickets</h3>
+            {{range .PNR.Tickets}}
+            <div class="card">
+                <div class="card-body">
+                    <h4>{{.Number}}</h4>
+
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td><strong>Is Active</strong></td>
+                                <td>{{.Status}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Passenger</strong></td>
+                                <td>{{.PassengerName}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Type</strong></td>
+                                <td>{{.Type}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Designator</strong></td>
+                                <td>{{.Designator}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong># of Coupons in Ticket</strong></td>
+                                <td>{{.NumCoupons}}</td>
+                            </tr>
+                            {{range .Coupons}}
+                            <tr>
+                                <td><strong>Coupon Number: {{.Index}}</strong></td>
+                                <td><strong>Origin:</strong> {{.Origin}} | <strong>Destination:</strong>
+                                    {{.Destination}} | <strong>Status:</strong> {{.Status}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+            {{end}}
+        </div>
+    </div>
+</div>
+{{end}}

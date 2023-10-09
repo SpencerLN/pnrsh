@@ -16,6 +16,7 @@ const (
 	deltaEnabled      = true
 	unitedEnabled     = true
 	virginEnabled     = true
+	alaskaEnabled     = true
 )
 
 var (
@@ -24,10 +25,10 @@ var (
 
 func listenAddress() string {
 	if port := os.Getenv("PORT"); port != "" {
-		return "0.0.0.0:" + port
+		return "127.0.0.1:" + port
 	}
 
-	return "0.0.0.0:8080"
+	return "127.0.0.1:8080"
 }
 
 func main() {
@@ -58,6 +59,11 @@ func main() {
 	if virginEnabled {
 		r.HandleFunc("/virgin", VirginHomeHandler).Methods("GET")
 		r.HandleFunc("/virgin", VirginRetrieveHandler).Methods("POST")
+	}
+
+	if alaskaEnabled {
+		r.HandleFunc("/alaska", AlaskaHomeHandler).Methods("GET")
+		r.HandleFunc("/alaska", AlaskaRetrieveHandler).Methods("POST")
 	}
 
 	srv := &http.Server{
