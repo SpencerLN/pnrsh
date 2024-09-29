@@ -11,6 +11,17 @@ package pnr
 // 	}
 // }
 
+func convertOSIs(res AlaskaManagePnrResponse, pnr *PNR) {
+	for _, osi := range res.OSIs {
+		pnr.OSIs = append(pnr.OSIs, OSI{
+			VendorCode: osi.VendorCode,
+			FullText:   osi.FullText,
+			FreeText:   osi.FreeText,
+			Id:         osi.ID,
+		})
+	}
+}
+
 func convertItinerary(res AlaskaManagePnrResponse, pnr *PNR) {
 	pnr.Itinerary.Origin = res.Itinerary.Origin
 	pnr.Itinerary.Type = res.Itinerary.TripType
@@ -35,6 +46,18 @@ func convertFlights(res AlaskaManagePnrResponse, pnr *PNR) {
 				IsDisrupted:            segment.IsDisrupted,
 				IsFlown:                segment.IsFlown,
 				Distance:               segment.Distance,
+				FUpgradeStatus:         "None",
+				PcUpgradeStatus:        "None",
+			}
+			if segment.IsWaitingUpgradeFirstClass {
+				f.FUpgradeStatus = "Pending"
+			} else if segment.IsConfirmedUpgradeFirstClass {
+				f.FUpgradeStatus = "Confirmed"
+			}
+			if segment.IsWaitingUpgradePremiumClass {
+				f.PcUpgradeStatus = "Pending"
+			} else if segment.IsConfirmedUpgradePremiumClass {
+				f.PcUpgradeStatus = "Confirmed"
 			}
 			for _, ssr := range segment.SpecialServiceRequests {
 				f.SSRs = append(f.SSRs, SSR{
@@ -71,6 +94,15 @@ func convertPassengers(res AlaskaManagePnrResponse, pnr *PNR) {
 				Status:      ssr.ActionCode,
 				FlightNum:   ssr.FlightNumber,
 				FlightDate:  ssr.FlightDate,
+			})
+		}
+		for _, osi := range pax.OSIs {
+
+			p.OSIs = append(p.OSIs, OSI{
+				VendorCode: osi.VendorCode,
+				Id:         osi.ID,
+				FullText:   osi.FullText,
+				FreeText:   osi.FreeText,
 			})
 		}
 		pnr.Passengers = append(pnr.Passengers, p)

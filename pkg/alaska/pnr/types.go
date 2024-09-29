@@ -32,6 +32,7 @@ type PNR struct {
 	Tickets    []Ticket
 	Itinerary  Itinerary
 	SMCalcLink string
+	OSIs       []OSI
 }
 
 type Itinerary struct {
@@ -58,6 +59,8 @@ type Flight struct {
 	ClassOfService         string
 	Cabin                  string
 	UpgradeStatus          string
+	FUpgradeStatus         string
+	PcUpgradeStatus        string
 	ScheduledDeparture     string
 	ScheduledArrival       string
 	FlightNumber           string
@@ -82,6 +85,7 @@ type Passenger struct {
 	FeeForAmPlusUpgrade    bool
 	FeeForPreferredUpgrade bool
 	SSRs                   []SSR
+	OSIs                   []OSI
 }
 
 type Coupon struct {
@@ -100,6 +104,13 @@ type SSR struct {
 	FlightNum   string
 	FlightDate  string
 	Id          string
+}
+
+type OSI struct {
+	FreeText   string
+	FullText   string
+	VendorCode string
+	Id         string
 }
 
 type Ticket struct {
@@ -163,9 +174,13 @@ type AlaskaManagePnrResponse struct {
 					Origin             string      `json:"origin"`
 					Destination        string      `json:"destination"`
 				} `json:"specialServiceRequests"`
-				Sequence    int  `json:"sequence"`
-				IsDisrupted bool `json:"isDisrupted"`
-				IsFlown     bool `json:"isFlown"`
+				Sequence                       int  `json:"sequence"`
+				IsDisrupted                    bool `json:"isDisrupted"`
+				IsFlown                        bool `json:"isFlown"`
+				IsWaitingUpgradeFirstClass     bool `json:"isWaitingUpgradeFirstClass"`
+				IsWaitingUpgradePremiumClass   bool `json:"isWaitingUpgradePremiumClass"`
+				IsConfirmedUpgradeFirstClass   bool `json:"isConfirmedUpgradeFirstClass"`
+				IsConfirmedUpgradePremiumClass bool `json:"isConfirmedUpgradePremiumClass"`
 			} `json:"segments"`
 			PreviousItinerary   []interface{} `json:"previousItinerary"`
 			HistoricItineraries []interface{} `json:"historicItineraries"`
@@ -213,8 +228,20 @@ type AlaskaManagePnrResponse struct {
 			Origin             string      `json:"origin"`
 			Destination        string      `json:"destination"`
 		} `json:"specialServiceRequests"`
+		OSIs []struct {
+			ID         string `json:"id"`
+			FreeText   string `json:"freeText"`
+			FullText   string `json:"fullText"`
+			VendorCode string `json:"vendorCode"`
+		} `json:"osis"`
 		TicketsMatchesItinerary bool `json:"ticketsMatchesItinerary"`
 	} `json:"passengers"`
+	OSIs []struct {
+		ID         string `json:"id"`
+		FreeText   string `json:"freeText"`
+		FullText   string `json:"fullText"`
+		VendorCode string `json:"vendorCode"`
+	} `json:"osis"`
 	IsGroupBooking bool `json:"isGroupBooking"`
 	Tickets        []struct {
 		Number     string `json:"number"`

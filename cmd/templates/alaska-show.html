@@ -3,7 +3,9 @@
 {{define "main"}}
 <div class="container">
     <h2>Confirmation #{{.ConfirmationCode}}</h2>
-    <h4><strong>Origin:</strong> {{.PNR.Itinerary.Origin}} | <strong>Type:</strong> {{.PNR.Itinerary.Type}} |
+    <h4>
+        <strong>Origin:</strong> {{.PNR.Itinerary.Origin}} |
+        <strong>Type:</strong> {{.PNR.Itinerary.Type}} |
         <strong>Tickets Match Itin:</strong> {{.PNR.Itinerary.MatchesTickets}}
     </h4>
 
@@ -18,50 +20,49 @@
         <div class="col">
             <h3>Flights</h3>
             {{range .PNR.Flights}}
-            <h5><strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong> {{.OriginAirportCode}} ✈️
-                {{.DestinationAirportCode}} <span class="badge bg-primary">{{.CurrentActionCode}}</span></h5>
+            <h5>
+                <strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong>
+                {{.OriginAirportCode}} ✈️ {{.DestinationAirportCode}}
+                <span class="badge bg-primary">{{.CurrentActionCode}}</span>
+            </h5>
             <table class="table">
                 <tbody>
                     <tr>
                         <td><strong>Status</strong></td>
                         <td>{{.Status}}</td>
                     </tr>
-
                     <tr>
                         <td><strong>Scheduled Departure</strong></td>
                         <td>{{.ScheduledDeparture}}</td>
                     </tr>
-
                     <tr>
                         <td><strong>Scheduled Arrival</strong></td>
                         <td>{{.ScheduledArrival}}</td>
                     </tr>
-
                     <tr>
                         <td><strong>Distance</strong></td>
                         <td>{{.Distance}} mi</td>
                     </tr>
-
                     <tr>
                         <td><strong>Operating/Marketing Airline</strong></td>
                         <td>{{.OperatingAirlineCode}}/{{.MarketingAirlineCode}}</td>
                     </tr>
-
                     <tr>
                         <td><strong>Current Action Code</strong></td>
                         <td>{{.CurrentActionCode}}</td>
                     </tr>
-
                     <tr>
                         <td><strong>Previous Action Code</strong></td>
                         <td>{{.PreviousActionCode}}</td>
                     </tr>
-
                     <tr>
-                        <td><strong>Upgrade Status</strong></td>
-                        <td>{{.UpgradeStatus}}</td>
+                        <td><strong>First Class Upgrade Status</strong></td>
+                        <td>{{.FUpgradeStatus}}</td>
                     </tr>
-
+                    <tr>
+                        <td><strong>Premium Class Upgrade Status</strong></td>
+                        <td>{{.PcUpgradeStatus}}</td>
+                    </tr>
                     <tr>
                         <td><strong>Class of Service</strong></td>
                         <td>{{.ClassOfService}}</td>
@@ -77,8 +78,11 @@
                     {{range .SSRs}}
                     <tr>
                         <td><strong>SSR ID: {{.Id}}</strong></td>
-                        <td> <strong>Type:</strong> {{.Type}} | <strong>Airline Code:</strong> {{.AirlineCode}} |
-                            <strong>Status:</strong> {{.Status}} | <strong>Remark:</strong> {{.Remark}}
+                        <td>
+                            <strong>Type:</strong> {{.Type}} |
+                            <strong>Airline Code:</strong> {{.AirlineCode}} |
+                            <strong>Status:</strong> {{.Status}} |
+                            <strong>Remark:</strong> {{.Remark}}
                         </td>
                     </tr>
                     {{end}}
@@ -86,18 +90,39 @@
             </table>
             {{end}}
 
-            <h3>Fare</h3>
+            <h3>OSIs</h3>
             <table class="table">
-
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vendor Code</th>
+                        <th>Free Text</th>
+                        <th>Full Text</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .PNR.OSIs}}
+                    <tr>
+                        <td><strong>{{.Id}}</strong></td>
+                        <td>{{.VendorCode}}</td>
+                        <td>{{.FreeText}}</td>
+                        <td>{{.FullText}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
             </table>
         </div>
+
         <div class="col">
             <h3>Passengers</h3>
             {{range .PNR.Passengers}}
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-body">
-                    <h5>{{.Name}} <span class="badge bg-success">FF Number: {{.FfNumber}}</span><span class="badge bg-success">Tier: {{.TierStatus}}</span> <span
-                            class="badge bg-primary"></span></h5>
+                    <h5>
+                        {{.Name}}
+                        <span class="badge bg-success">FF Number: {{.FfNumber}}</span>
+                        <span class="badge bg-success">Tier: {{.TierStatus}}</span>
+                    </h5>
                     <h6>SSRs</h6>
                     <table class="table">
                         <tbody>
@@ -107,30 +132,48 @@
                                 <td>{{.AirlineCode}}</td>
                                 <td>{{.FlightNum}}</td>
                                 <td>{{.FlightDate}}</td>
-                                <td>{{.Status}}</td>>
+                                <td>{{.Status}}</td>
                                 <td>{{.Remark}}</td>
                             </tr>
                             {{end}}
                         </tbody>
                     </table>
-
+                    <h6>OSIs</h6>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Vendor Code</th>
+                                <th>Free Text</th>
+                                <th>Full Text</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .OSIs}}
+                            <tr>
+                                <td><strong>{{.Id}}</strong></td>
+                                <td>{{.VendorCode}}</td>
+                                <td>{{.FreeText}}</td>
+                                <td>{{.FullText}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <br />
             {{end}}
+
             <h3>Tickets</h3>
             {{range .PNR.Tickets}}
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h4>{{.Number}}</h4>
-
                     <table class="table">
                         <tbody>
                             <tr>
                                 <td><strong>Is Active</strong></td>
                                 <td>{{.Status}}</td>
                             </tr>
-
                             <tr>
                                 <td><strong>Passenger</strong></td>
                                 <td>{{.PassengerName}}</td>
@@ -150,15 +193,17 @@
                             {{range .Coupons}}
                             <tr>
                                 <td><strong>Coupon Number: {{.Index}}</strong></td>
-                                <td><strong>Origin:</strong> {{.Origin}} | <strong>Destination:</strong>
-                                    {{.Destination}} | <strong>Status:</strong> {{.Status}}</td>
+                                <td>
+                                    <strong>Origin:</strong> {{.Origin}} |
+                                    <strong>Destination:</strong> {{.Destination}} |
+                                    <strong>Status:</strong> {{.Status}}
+                                </td>
                             </tr>
                             {{end}}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <br />
             {{end}}
         </div>
     </div>

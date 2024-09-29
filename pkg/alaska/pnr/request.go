@@ -15,7 +15,7 @@ import (
 const (
 	reqBody      = `{"recLoc":"{conf}","lName":"{lname}"}`
 	reqUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'"
-	reqEndpoint  = "https://flightchanges-bff.ecomm-prod-aks.alaskaair.com/api/ChangeReservation/ReservationDetails"
+	reqEndpoint  = "https://apis.alaskaair.com/guestServices/flightChanges/bff/ChangeReservation/ReservationDetails"
 )
 
 var (
@@ -45,9 +45,22 @@ func buildRequestWithBodyReader(endpoint string, body io.Reader) (*http.Request,
 	}
 
 	req, _ := http.NewRequest("POST", endpoint, body)
+	req.Header.Set("Accept", "*/*")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
+	req.Header.Set("Api-Version", "2")
+	req.Header.Set("Cache-Control", "no-cache")
+	req.Header.Set("Connection", "keep-alive")
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Origin", "https://www.alaskaair.com")
+	req.Header.Set("Pragma", "no-cache")
+	req.Header.Set("Referer", "https://www.alaskaair.com/")
+	req.Header.Set("Sec-Fetch-Dest", "empty")
+	req.Header.Set("Sec-Fetch-Mode", "cors")
+	req.Header.Set("Sec-Fetch-Site", "same-site")
 	req.Header.Set("User-Agent", reqUserAgent)
-	req.Header.Set("authority", "flightchanges-bff.ecomm-prod-aks.alaskaair.com")
+	req.Header.Set("sec-ch-ua", `"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"`)
+	req.Header.Set("sec-ch-ua-mobile", "?0")
+	req.Header.Set("sec-ch-ua-platform", `"macOS"`)
 
 	if bodyLen > 0 {
 		req.Header.Set("Content-Length", strconv.Itoa(bodyLen))
@@ -113,6 +126,7 @@ func convertResponse(res AlaskaManagePnrResponse) (pnr PNR) {
 
 	// convertRemarks(res, &pnr)
 	convertFlights(res, &pnr)
+	convertOSIs(res, &pnr)
 	convertPassengers(res, &pnr)
 	convertTickets(res, &pnr)
 	convertItinerary(res, &pnr)
