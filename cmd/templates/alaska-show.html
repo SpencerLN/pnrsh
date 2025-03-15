@@ -140,21 +140,12 @@
                     </table>
                     <h6>OSIs</h6>
                     <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Vendor Code</th>
-                                <th>Free Text</th>
-                                <th>Full Text</th>
-                            </tr>
-                        </thead>
                         <tbody>
                             {{range .OSIs}}
                             <tr>
                                 <td><strong>{{.Id}}</strong></td>
                                 <td>{{.VendorCode}}</td>
                                 <td>{{.FreeText}}</td>
-                                <td>{{.FullText}}</td>
                             </tr>
                             {{end}}
                         </tbody>

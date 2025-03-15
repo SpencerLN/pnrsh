@@ -24,11 +24,15 @@ var (
 )
 
 func listenAddress() string {
-	if port := os.Getenv("PORT"); port != "" {
-		return "127.0.0.1:" + port
+	listenAddress := os.Getenv("LISTEN_ADDRESS")
+	if listenAddress == "" {
+		listenAddress = "127.0.0.1"
 	}
-
-	return "127.0.0.1:8080"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	return listenAddress + ":" + port
 }
 
 func main() {
